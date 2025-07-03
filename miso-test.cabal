@@ -1,0 +1,35 @@
+cabal-version:      3.0
+name:               miso-test
+version:            0.1.0.0
+-- synopsis:
+-- description:
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             Micha Riedlinger
+maintainer:         kontakt@micha-riedlinger.de
+-- copyright:
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+-- extra-source-files:
+
+
+common wasm
+  if arch(wasm32)
+    ghc-options:
+      -no-hs-main
+      -optl-mexec-model=reactor
+      "-optl-Wl,--export=hs_start"
+    cpp-options:
+      -DWASM
+
+common warnings
+    ghc-options: -Wall
+
+executable miso-test
+    import:           warnings, wasm
+    main-is:          Main.hs
+    -- other-modules:
+    -- other-extensions:
+    build-depends:    base, miso, lens
+    hs-source-dirs:   app
+    default-language: Haskell2010
