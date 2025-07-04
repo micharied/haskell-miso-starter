@@ -1,8 +1,9 @@
 cabal-version:      3.0
 name:               miso-test
 version:            0.1.0.0
--- synopsis:
--- description:
+synopsis:           A Miso web application
+description:        A simple Miso application with frontend and backend components
+category:           Web
 license:            BSD-3-Clause
 license-file:       LICENSE
 author:             Micha Riedlinger
@@ -12,24 +13,87 @@ build-type:         Simple
 extra-doc-files:    CHANGELOG.md
 -- extra-source-files:
 
+flag dev
+  manual:
+    True
+  default:
+    False
+  description:
+    Run haskell-miso.org client w/ jsaddle and rapid
 
-common wasm
+common backend-only
+  if os(ghcjs) || impl(ghcjs) || arch(javascript) || flag(dev)
+    buildable: False
+
+common frontend-only
+  if os(ghcjs) || impl(ghcjs) || arch(javascript) || arch(wasm32) || flag(dev)
+    buildable: True
+  else
+    buildable: False
+
+  if flag(dev)
+    other-modules:
+      DevelMain
+    build-depends:
+      rapid
+
+common common-options
   if arch(wasm32)
     ghc-options:
-      -no-hs-main
-      -optl-mexec-model=reactor
-      "-optl-Wl,--export=hs_start"
+      -no-hs-main -optl-mexec-model=reactor "-optl-Wl,--export=hs_start"
     cpp-options:
       -DWASM
+  ghc-options:
+    -funbox-strict-fields -ferror-spans -fspecialise-aggressively
 
-common warnings
-    ghc-options: -Wall
+common common-modules
+  other-modules:
+     Common
 
-executable miso-test
-    import:           warnings, wasm
-    main-is:          Main.hs
-    -- other-modules:
-    -- other-extensions:
-    build-depends:    base, miso, lens
-    hs-source-dirs:   app
-    default-language: Haskell2010
+executable backend
+  import:
+     backend-only, common-modules, common-options
+  main-is:
+    Main.hs
+  ghc-options:
+    -threaded -Wall -rtsopts
+  hs-source-dirs:
+    backend, shared
+  build-depends:
+    aeson,
+    base,
+    containers,
+    http-types,
+    miso,
+    mtl,
+    network-uri,
+    servant,
+    servant-server,
+    text,
+    wai,
+    wai-app-static,
+    wai-extra,
+    warp
+  default-language:
+    Haskell2010
+
+executable frontend
+  import:
+    frontend-only, common-modules, common-options
+  main-is:
+    Main.hs
+  ghcjs-options:
+    -dedupe
+  cpp-options:
+    -DGHCJS_BROWSER
+  hs-source-dirs:
+    frontend, shared
+  build-depends:
+    aeson,
+    base,
+    containers,
+    miso,
+    mtl,
+    servant,
+  default-language:
+    Haskell2010
