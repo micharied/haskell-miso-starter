@@ -28,12 +28,10 @@
           projectRoot = builtins.toString (lib.fileset.toSource {
             root = ./.;
             fileset = lib.fileset.unions [
-              (./. + /frontend)
-              (./. + /backend)
-              (./. + /shared)
-              (./. + /haskell-miso-starter.cabal)
-              (./. + /LICENSE)
-              (./. + /CHANGELOG.md)
+              (./frontend)
+              (./backend)
+              (./shared)
+              (./haskell-miso-starter.cabal)
             ];
           });
 
@@ -78,12 +76,10 @@
           projectRoot = builtins.toString (lib.fileset.toSource {
             root = ./.;
             fileset = lib.fileset.unions [
-              (./. + /backend)
-              (./. + /frontend)
-              (./. + /shared)
-              (./. + /haskell-miso-starter.cabal)
-              (./. + /LICENSE)
-              (./. + /CHANGELOG.md)
+              (./backend)
+              (./frontend)
+              (./shared)
+              (./haskell-miso-starter.cabal)
             ];
           });
 
