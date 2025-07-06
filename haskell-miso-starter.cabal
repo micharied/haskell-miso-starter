@@ -5,12 +5,10 @@ synopsis:           A Miso web application
 description:        A simple Miso application with frontend and backend components
 category:           Web
 license:            BSD-3-Clause
-license-file:       LICENSE
 author:             Micha Riedlinger
 maintainer:         kontakt@micha-riedlinger.de
 -- copyright:
 build-type:         Simple
-extra-doc-files:    CHANGELOG.md
 -- extra-source-files:
 
 flag dev
