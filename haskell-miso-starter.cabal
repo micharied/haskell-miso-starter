@@ -1,5 +1,5 @@
 cabal-version:      3.0
-name:               miso-test
+name:               haskell-miso-starter
 version:            0.1.0.0
 synopsis:           A Miso web application
 description:        A simple Miso application with frontend and backend components

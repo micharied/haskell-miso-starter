@@ -1,6 +1,15 @@
 {
   description = "A flake for developing a miso app";
 
+  nixConfig = {
+    substituters =
+      [ "https://cache.nixos.org/" "https://haskell-miso-cachix.cachix.org" ];
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "haskell-miso-cachix.cachix.org-1:m8hN1cvFMJtYib4tj+06xkKt5ABMSGfe8W7s40x1kQ0="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     haskell-flake.url = "github:srid/haskell-flake";
@@ -22,7 +31,7 @@
               (./. + /frontend)
               (./. + /backend)
               (./. + /shared)
-              (./. + /miso-test.cabal)
+              (./. + /haskell-miso-starter.cabal)
               (./. + /LICENSE)
               (./. + /CHANGELOG.md)
             ];
@@ -36,8 +45,8 @@
 
           # Add your package overrides here
           settings = {
-            miso-test = {
-              # Enable any specific settings for miso-test
+            haskell-miso-starter = {
+              # Enable any specific settings for haskell-miso-starter
               check = true;
             };
             miso = {
@@ -72,7 +81,7 @@
               (./. + /backend)
               (./. + /frontend)
               (./. + /shared)
-              (./. + /miso-test.cabal)
+              (./. + /haskell-miso-starter.cabal)
               (./. + /LICENSE)
               (./. + /CHANGELOG.md)
             ];
@@ -86,8 +95,8 @@
 
           # Add your package overrides here
           settings = {
-            miso-test = {
-              # Enable any specific settings for miso-test
+            haskell-miso-starter = {
+              # Enable any specific settings for haskell-miso-starter
               check = true;
             };
             miso = {
@@ -102,22 +111,8 @@
 
         # Default package & app.
         packages.default = pkgs.writeShellScriptBin "haskell-miso-starter" ''
-              export STATIC_DIR=${self'.packages.frontend-miso-test}/bin/frontend.jsexe/all.js
-              ${self'.packages.backend-miso-test}/bin/backend
-            '';
-
-        packages.defasssult = pkgs.runCommand "haskell-miso-starter" { } ''
-                    mkdir -p $out/{bin,static}
-                    cp ${self'.packages.backend-miso-test}/bin/* $out/bin/
-                    cp -v ${self'.packages.frontend-miso-test}/bin/frontend.jsexe/all.js $out/static/all.js
-                    
-                    # Create a wrapper script that sets STATIC_DIR
-                    cat > $out/bin/run-backend << 'EOF'
-          #!/usr/bin/env bash
-          export STATIC_DIR="$(dirname "$0")/../static"
-          exec "$(dirname "$0")/backend" "$@"
-          EOF
-                    chmod +x $out/bin/run-backend
+          export STATIC_DIR=${self'.packages.frontend-haskell-miso-starter}/bin/frontend.jsexe/all.js
+          ${self'.packages.backend-haskell-miso-starter}/bin/backend
         '';
       };
     };
